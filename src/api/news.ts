@@ -3,7 +3,7 @@ import client from "./client";
 import type { CreateNewsDto, News } from "@/types/news.type";
 
 export const newsApi = {
-    getAll: (page = 1, limit = 10, category?: string, search?: string) => client.get<PaginatedResponse<News>>('/news/admin',
+    getAll: (page = 1, limit = 10, category?: string, search?: string) => client.get<PaginatedResponse<News>>('/news/admin/all',
         {
             params: { page, limit, category, search }
         }
