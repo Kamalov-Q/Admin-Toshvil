@@ -65,3 +65,21 @@ export interface LotImage {
     isMain: boolean;
     createdAt: string;
 }
+
+export interface CreateLotDto {
+    titleUz: string;
+    titleRu?: string;
+    titleEn?: string;
+    lotNumber: number;
+    lotCode?: string;
+    status?: string;
+    paymentType?: string;
+    tradeDate: string;
+    applicationDeadline: string;
+    addressUz: string;
+    addressRu?: string;
+    addressEn?: string;
+    districtId?: string;
+    imageUrls?: string[];
+    [key: string]: any;
+}

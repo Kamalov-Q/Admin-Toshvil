@@ -28,3 +28,23 @@ export interface District {
     createdAt: Date;
     updatedAt: Date;
 }
+
+export interface CreateDistrictDto {
+    nameUz: string;
+    nameRu?: string;
+    nameEn?: string;
+    type: string;
+    slug?: string;
+    hokimNameUz?: string;
+    hokimNameRu?: string;
+    hokimNameEn?: string;
+    hokimPhoto?: string;
+    addressUz?: string;
+    addressRu?: string;
+    addressEn?: string;
+    phone?: string;
+    email?: string;
+    latitude?: number;
+    longitude?: number;
+    sortOrder?: number;
+}

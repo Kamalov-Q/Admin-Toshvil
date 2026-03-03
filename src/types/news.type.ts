@@ -27,3 +27,19 @@ export interface News {
     updatedAt: string;
 
 }
+
+export interface CreateNewsDto {
+    titleUz: string;
+    titleRu: string;
+    titleEn: string;
+    descriptionUz: string;
+    descriptionRu: string;
+    descriptionEn: string;
+    shortDescriptionUz: string;
+    shortDescriptionRu: string;
+    shortDescriptionEn: string;
+    image: string;
+    category: string;
+    isPublished: boolean;
+    
+}

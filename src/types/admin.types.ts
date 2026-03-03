@@ -1,16 +1,15 @@
-export const UserRoleType = {
+export const AdminRoleType = {
     ADMIN: 'admin'
 }
 
-export type UserRole = typeof UserRoleType[keyof typeof UserRoleType];
+export type AdminRole = typeof AdminRoleType[keyof typeof AdminRoleType];
 
-export interface User {
+export interface Admin {
     id: string;
     email: string;
     fullName: string;
-    role: UserRole;
+    role: AdminRole;
     isActive: boolean;
     createdAt: Date;
     updatedAt: Date;
-
 }
