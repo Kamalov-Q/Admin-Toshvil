@@ -56,9 +56,9 @@ export const Sidebar: React.FC = () => {
                     navigate(item.path);
                     toggleSidebar();
                   }}
-                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${isActive
-                      ? 'bg-primary-600 text-white'
-                      : 'text-gray-300 hover:bg-gray-800'
+                  className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-colors cursor-pointer ${isActive
+                    ? 'bg-primary-600 text-white'
+                    : 'text-gray-300 hover:bg-gray-800'
                     }`}
                 >
                   <Icon size={20} />
@@ -71,7 +71,7 @@ export const Sidebar: React.FC = () => {
           <div className="border-t border-gray-800 p-4">
             <button
               onClick={handleLogout}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-800 transition-colors"
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-gray-300 hover:bg-gray-800 transition-colors cursor-pointer"
             >
               <LogOut size={20} />
               <span>Logout</span>

@@ -16,7 +16,7 @@ export const DistrictsPage: React.FC = () => {
                     <h1 className="text-3xl font-bold text-gray-900">Districts Management</h1>
                     <p className="text-gray-600 mt-1">Manage district and city information</p>
                 </div>
-                <Button>
+                <Button className='cursor-pointer bg-black'>
                     <Plus size={20} className="mr-2" />
                     New District
                 </Button>

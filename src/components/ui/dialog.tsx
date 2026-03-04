@@ -24,8 +24,9 @@ export const Dialog: React.FC<DialogProps> = ({
         className="fixed inset-0 bg-black/50"
         onClick={() => onOpenChange(false)}
       />
-      <div className="relative bg-white rounded-lg shadow-lg max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between p-6 border-b border-gray-200">
+      <div className="relative bg-white rounded-lg shadow-lg max-w-2xl w-full mx-4 max-h-[90vh] overflow-y-auto flex flex-col">
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b border-gray-200 flex-shrink-0">
           <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
           <button
             onClick={() => onOpenChange(false)}
@@ -34,8 +35,18 @@ export const Dialog: React.FC<DialogProps> = ({
             <X size={24} />
           </button>
         </div>
-        <div className="p-6">{children}</div>
-        {footer && <div className="p-6 border-t border-gray-200 flex gap-2 justify-end">{footer}</div>}
+
+        {/* Content - Scrollable */}
+        <div className="flex-1 overflow-y-auto p-6">
+          {children}
+        </div>
+
+        {/* Footer - Fixed */}
+        {footer && (
+          <div className="border-t border-gray-200 p-6 bg-gray-50 flex-shrink-0">
+            {footer}
+          </div>
+        )}
       </div>
     </div>
   );

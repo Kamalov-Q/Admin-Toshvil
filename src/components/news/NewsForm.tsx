@@ -7,7 +7,6 @@ import type { News } from '@/types/news.types';
 import { Card } from '../ui/card';
 import { Input } from '../ui/input';
 import { ImageUploadField } from '../upload/UploadField';
-import { Button } from '../ui/button';
 
 const newsSchema = z.object({
     titleUz: z.string().min(3, 'Sarlavha kamida 3 ta belgidan iborat bo\'lishi kerak'),
@@ -60,7 +59,7 @@ export const NewsForm: React.FC<NewsFormProps> = ({ initialData, onSubmit, isLoa
     });
 
     const imageUrl = watch('image');
-    const isPublished = watch('isPublished');
+    watch('isPublished');
 
     return (
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -199,16 +198,19 @@ export const NewsForm: React.FC<NewsFormProps> = ({ initialData, onSubmit, isLoa
                     {/* Category Selection */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                            📁 Kategoriya
+                            📁 Category
                         </label>
                         <select
                             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-200"
                             {...register('category')}
                         >
                             <option value="">-- Kategoriya tanlang --</option>
-                            <option value="technology">💻 Texnologiya</option>
-                            <option value="business">💼 Biznes</option>
-                            <option value="other">📋 Boshqa</option>
+                            <option value="announcements">Announcement</option>
+                            <option value="events">Events</option>
+                            <option value="technology">Technology</option>
+                            <option value="press_release">Press Release</option>
+                            <option value="other">Others</option>
+
                         </select>
                     </div>
 
@@ -232,18 +234,6 @@ export const NewsForm: React.FC<NewsFormProps> = ({ initialData, onSubmit, isLoa
                     </div>
                 </div>
             </Card>
-
-            {/* Form Actions */}
-            <div className="flex gap-3 justify-end sticky bottom-0 bg-white p-4 rounded-lg shadow-lg">
-                <Button
-                    type="submit"
-                    loading={isLoading}
-                    disabled={isLoading}
-                    className="min-w-[250px]"
-                >
-                    {initialData ? '✏️ Yangilikni Yangilash' : '➕ Yangi Yangilik Qo\'shish'}
-                </Button>
-            </div>
         </form>
     );
 };

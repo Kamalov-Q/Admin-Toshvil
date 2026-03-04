@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
+import { Button } from '../components/ui/button';
 import { NewsTable } from '../components/news/NewsTable';
 import { NewsForm } from '../components/news/NewsForm';
 import { NewsFilter } from '../components/news/NewsFilter';
 import { NewsDetailModal } from '../components/news/NewsDetailModal';
+import { Dialog } from '../components/ui/dialog';
 import { useNewsList, useCreateNews, useUpdateNews, useDeleteNews } from '../hooks/useNews';
 import type { News } from '../types/news.types';
 import { Plus, RefreshCw } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Dialog } from '@/components/ui/dialog';
 
 export const NewsPage: React.FC = () => {
     const [page, setPage] = useState(1);
@@ -80,9 +80,9 @@ export const NewsPage: React.FC = () => {
             {/* Header */}
             <div className="flex items-center justify-between flex-wrap gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900">📰 Yangiliklar Boshqaruvi</h1>
+                    <h1 className="text-3xl font-bold text-gray-900">📰 News Management</h1>
                     <p className="text-gray-600 mt-1">
-                        Yangiliklar yaratish, tahrirlash va boshqarish
+                        Create, edit, and manage news articles
                     </p>
                 </div>
                 <div className="flex gap-2">
@@ -91,13 +91,14 @@ export const NewsPage: React.FC = () => {
                         size="md"
                         onClick={() => refetch()}
                         disabled={isLoading}
-                        title="Sahifani yangilash"
+                        title="Refresh"
+                        className='cursor-pointer'
                     >
                         <RefreshCw size={20} className={isLoading ? 'animate-spin' : ''} />
                     </Button>
-                    <Button onClick={handleCreateNew}>
+                    <Button onClick={handleCreateNew} className='cursor-pointer bg-black'>
                         <Plus size={20} className="mr-2" />
-                        Yangi Yangilik
+                        New Article
                     </Button>
                 </div>
             </div>
@@ -105,15 +106,15 @@ export const NewsPage: React.FC = () => {
             {/* Statistics Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200 shadow-sm">
-                    <p className="text-blue-600 text-sm font-medium">📊 Jami Yangiliklar</p>
+                    <p className="text-blue-600 text-sm font-medium">📊 Total Articles</p>
                     <p className="text-3xl font-bold text-blue-900 mt-2">{data?.total || 0}</p>
                 </div>
                 <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 border border-purple-200 shadow-sm">
-                    <p className="text-purple-600 text-sm font-medium">📄 Joriy Sahifa</p>
+                    <p className="text-purple-600 text-sm font-medium">📄 Current Page</p>
                     <p className="text-3xl font-bold text-purple-900 mt-2">{page}</p>
                 </div>
                 <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 border border-green-200 shadow-sm">
-                    <p className="text-green-600 text-sm font-medium">📑 Jami Sahifalar</p>
+                    <p className="text-green-600 text-sm font-medium">📑 Total Pages</p>
                     <p className="text-3xl font-bold text-green-900 mt-2">{totalPages || 1}</p>
                 </div>
             </div>
@@ -131,29 +132,59 @@ export const NewsPage: React.FC = () => {
                     setPage(1);
                 }}
                 onReset={handleResetFilters}
+                isSearching={isLoading}
             />
 
             {/* News Table */}
             <NewsTable
                 news={data?.data || []}
-                isLoading={isLoading || isDeleting}
+                isLoading={isLoading}
                 page={page}
                 totalPages={totalPages}
                 onPageChange={setPage}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
+                isDeleting={isDeleting}
             />
 
             {/* Create/Edit Dialog */}
             <Dialog
                 open={dialogOpen}
                 onOpenChange={setDialogOpen}
-                title={editingNews ? '✏️ Yangilikni Tahrirlash' : '➕ Yangi Yangilik Yaratish'}
+                title={editingNews ? '✏️ Edit News Article' : '➕ Create News Article'}
+                footer={
+                    <div className="flex gap-3 justify-end">
+                        <Button
+                            variant="secondary"
+                            onClick={() => setDialogOpen(false)}
+                            disabled={isCreating || isUpdating}
+                            className='cursor-pointer'
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                const form = document.querySelector('form');
+                                if (form) {
+                                    form.dispatchEvent(
+                                        new Event('submit', { bubbles: true, cancelable: true })
+                                    );
+                                }
+                            }}
+                            loading={isCreating || isUpdating}
+                            disabled={isCreating || isUpdating}
+                            className='cursor-pointer'
+                        >
+                            {editingNews ? '✏️ Update Article' : '➕ Create Article'}
+                        </Button>
+                    </div>
+                }
             >
                 <NewsForm
                     initialData={editingNews || undefined}
                     onSubmit={handleSubmit}
                     isLoading={isCreating || isUpdating}
+                // onCancel={() => setDialogOpen(false)}
                 />
             </Dialog>
 

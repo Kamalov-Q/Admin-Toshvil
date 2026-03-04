@@ -23,6 +23,7 @@ export const Header: React.FC = () => {
                     <Button
                         variant="ghost"
                         size="sm"
+                        className='cursor-pointer'
                         onClick={() => {
                             logout();
                             navigate('/login');

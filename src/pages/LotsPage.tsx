@@ -17,7 +17,7 @@ export const LotsPage: React.FC = () => {
                     <h1 className="text-3xl font-bold text-gray-900">Land Lots Management</h1>
                     <p className="text-gray-600 mt-1">Manage land auction lots and tenders</p>
                 </div>
-                <Button>
+                <Button className='cursor-pointer bg-black'>
                     <Plus size={20} className="mr-2" />
                     New Lot
                 </Button>

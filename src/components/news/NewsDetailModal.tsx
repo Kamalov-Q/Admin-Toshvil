@@ -16,7 +16,7 @@ export const NewsDetailModal: React.FC<NewsDetailModalProps> = ({
     onOpenChange,
 }) => {
     if (!news) return null;
-
+ 
     return (
         <Dialog
             open={open}

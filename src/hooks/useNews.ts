@@ -29,11 +29,11 @@ export const useCreateNews = () => {
             newsApi.create(data).then((res) => res.data),
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['news'] });
-            addToast('✅ News article created successfully', 'success');
+            addToast('News article created successfully', 'success');
         },
         onError: (error: any) => {
             const message = error.response?.data?.message || 'Failed to create news article';
-            addToast(`❌ ${message}`, 'error');
+            addToast(`${message}`, 'error');
             console.error('Create news error:', error);
         },
     });
@@ -49,11 +49,11 @@ export const useUpdateNews = (id: string) => {
         onSuccess: (data) => {
             queryClient.invalidateQueries({ queryKey: ['news'] });
             queryClient.invalidateQueries({ queryKey: ['news', id] });
-            addToast('✅ News article updated successfully', 'success');
+            addToast('News article updated successfully', 'success');
         },
         onError: (error: any) => {
             const message = error.response?.data?.message || 'Failed to update news article';
-            addToast(`❌ ${message}`, 'error');
+            addToast(`${message}`, 'error');
             console.error('Update news error:', error);
         },
     });
@@ -67,11 +67,11 @@ export const useDeleteNews = () => {
         mutationFn: (id: string) => newsApi.delete(id),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['news'] });
-            addToast('✅ News article deleted successfully', 'success');
+            addToast('News article deleted successfully', 'success');
         },
         onError: (error: any) => {
             const message = error.response?.data?.message || 'Failed to delete news article';
-            addToast(`❌ ${message}`, 'error');
+            addToast(`${message}`, 'error');
             console.error('Delete news error:', error);
         },
     });
