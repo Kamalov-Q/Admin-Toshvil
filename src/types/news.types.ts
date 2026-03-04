@@ -1,7 +1,9 @@
 export const NewsCategory = {
+    ANNOUNCEMENTS: 'announcements',
+    EVENTS: 'events',
     TECHNOLOGY: 'technology',
-    BUSINESS: 'business',
-    OTHER: 'other'
+    PRESS_RELEASE: 'press_release',
+    OTHER: 'other',
 }
 
 export type NewsCategory = typeof NewsCategory[keyof typeof NewsCategory];
@@ -41,5 +43,5 @@ export interface CreateNewsDto {
     image: string;
     category: string;
     isPublished: boolean;
-    
+
 }
