@@ -8,7 +8,7 @@ const menuItems = [
   { label: 'Dashboard', path: '/dashboard', icon: BarChart3 },
   { label: 'News', path: '/news', icon: Newspaper },
   { label: 'Lots', path: '/lots', icon: MapPin },
-  { label: 'Districts', path: '/districts', icon: MapPin },
+  // { label: 'Districts', path: '/districts', icon: MapPin },
 ];
 
 export const Sidebar: React.FC = () => {

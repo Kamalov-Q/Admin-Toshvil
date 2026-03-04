@@ -1,5 +1,3 @@
-import type { District } from "./district.types";
-
 export const LotStatus = {
     UPCOMING: 'upcoming',
     ACTIVE: 'active',
@@ -24,6 +22,23 @@ export const PaymentType = {
 
 export type PaymentType = typeof PaymentType[keyof typeof PaymentType];
 
+export const LandRightType = {
+    IJARA: 'ijara',
+    KAPITAL: 'kapital',
+}
+
+export type LandRightType = typeof LandRightType[keyof typeof LandRightType];
+
+
+export interface LotImage {
+    id: string;
+    url: string;
+    lotId: string;
+    sortOrder: number;
+    isMain: boolean;
+    createdAt: string;
+}
+
 export interface Lot {
     id: string;
     titleUz: string;
@@ -37,33 +52,58 @@ export interface Lot {
     tradeType: TradeType;
     tradeDate: string;
     applicationDeadline: string;
+    tradeLocationUz?: string;
+    tradeLocationRu?: string;
+    tradeLocationEn?: string;
     addressUz: string;
     addressRu?: string;
     addressEn?: string;
-    latitude?: number;
-    longitude?: number;
-    landArea?: number;
+    region?: string;
+    landRightType: LandRightType;
+    leaseYears?: number;
+    permittedUseUz?: string;
+    permittedUseRu?: string;
+    permittedUseEn?: string;
+    landCategoryUz?: string;
+    landCategoryRu?: string;
+    landCategoryEn?: string;
+    jobsToCreate?: number;
+    requiredInvestmentUz?: string;
+    requiredInvestmentRu?: string;
+    requiredInvestmentEn?: string;
     hasGas?: boolean;
     hasElectricity?: boolean;
     hasWater?: boolean;
     hasSewage?: boolean;
+    landArea?: number;
+    distanceToRoad?: string;
+    locationAddressUz?: string;
+    locationAddressRu?: string;
+    locationAddressEn?: string;
+    hasBuilding?: boolean;
+    buildingArea?: number;
+    noteUz?: string;
+    noteRu?: string;
+    noteEn?: string;
+    usageWarningUz?: string;
+    usageWarningRu?: string;
+    usageWarningEn?: string;
+    customerName?: string;
+    customerType?: string;
+    customerDistrict?: string;
+    customerAddress?: string;
+    customerPhone?: string;
+    customerExtraPhone?: string;
+    customerEmail?: string;
+    latitude?: number;
+    longitude?: number;
+    geoPolygon?: object;
+    districtId?: string;
+    images?: LotImage[];
     isActive: boolean;
     viewCount: number;
     createdAt: string;
     updatedAt: string;
-    districtId?: string;
-    images?: LotImage[];
-    district?: District;
-}
-
-
-export interface LotImage {
-    id: string;
-    url: string;
-    lotId: string;
-    sortOrder: number;
-    isMain: boolean;
-    createdAt: string;
 }
 
 export interface CreateLotDto {
@@ -72,14 +112,58 @@ export interface CreateLotDto {
     titleEn?: string;
     lotNumber: number;
     lotCode?: string;
-    status?: string;
-    paymentType?: string;
+    status?: LotStatus;
+    paymentType?: PaymentType;
+    paymentMonths?: number;
+    tradeType?: TradeType;
     tradeDate: string;
     applicationDeadline: string;
+    tradeLocationUz?: string;
+    tradeLocationRu?: string;
+    tradeLocationEn?: string;
     addressUz: string;
     addressRu?: string;
     addressEn?: string;
+    region?: string;
+    landRightType?: LandRightType;
+    leaseYears?: number;
+    permittedUseUz?: string;
+    permittedUseRu?: string;
+    permittedUseEn?: string;
+    landCategoryUz?: string;
+    landCategoryRu?: string;
+    landCategoryEn?: string;
+    jobsToCreate?: number;
+    requiredInvestmentUz?: string;
+    requiredInvestmentRu?: string;
+    requiredInvestmentEn?: string;
+    hasGas?: boolean;
+    hasElectricity?: boolean;
+    hasWater?: boolean;
+    hasSewage?: boolean;
+    landArea?: number;
+    distanceToRoad?: string;
+    locationAddressUz?: string;
+    locationAddressRu?: string;
+    locationAddressEn?: string;
+    hasBuilding?: boolean;
+    buildingArea?: number;
+    noteUz?: string;
+    noteRu?: string;
+    noteEn?: string;
+    usageWarningUz?: string;
+    usageWarningRu?: string;
+    usageWarningEn?: string;
+    customerName?: string;
+    customerType?: string;
+    customerDistrict?: string;
+    customerAddress?: string;
+    customerPhone?: string;
+    customerExtraPhone?: string;
+    customerEmail?: string;
+    latitude?: number;
+    longitude?: number;
+    geoPolygon?: object;
     districtId?: string;
     imageUrls?: string[];
-    [key: string]: any;
 }

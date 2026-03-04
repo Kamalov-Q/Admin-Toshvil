@@ -1,84 +1,191 @@
 import React, { useState } from 'react';
-import { useLotsList, useDeleteLot } from '../hooks/useLots';
-import { Plus, Edit2, Trash2, Eye } from 'lucide-react';
-import { format } from 'date-fns';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Button } from '../components/ui/button';
+import { LotsTable } from '../components/lots/LotsTable';
+import { LotsForm } from '../components/lots/LotsForm';
+import { LotsFilter } from '../components/lots/LotsFilter';
+import { Dialog } from '../components/ui/dialog';
+import { useLotsList, useCreateLot, useUpdateLot, useDeleteLot } from '../hooks/useLots';
+import type { Lot } from '../types/lots.types';
+import { Plus, RefreshCw } from 'lucide-react';
 
 export const LotsPage: React.FC = () => {
     const [page, setPage] = useState(1);
-    const { data, isLoading } = useLotsList(page, 10);
-    const { mutate: deleteLot } = useDeleteLot();
+    const [search, setSearch] = useState('');
+    const [status, setStatus] = useState('');
+    const [tradeType, setTradeType] = useState('');
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [editingLot, setEditingLot] = useState<Lot | null>(null);
+
+    const { data, isLoading, refetch } = useLotsList(page, 10, {
+        search,
+        status,
+        tradeType,
+    });
+    const { mutate: createLot, isPending: isCreating } = useCreateLot();
+    const { mutate: updateLot, isPending: isUpdating } = useUpdateLot(editingLot?.id || '');
+    const { mutate: deleteLot, isPending: isDeleting } = useDeleteLot();
+
+    const handleCreateNew = () => {
+        setEditingLot(null);
+        setDialogOpen(true);
+    };
+
+    const handleEdit = (lot: Lot) => {
+        setEditingLot(lot);
+        setDialogOpen(true);
+    };
+
+    const handleDelete = (id: string) => {
+        deleteLot(id, {
+            onSuccess: () => {
+                if ((data?.data.data?.length || 0) <= 1 && page > 1) {
+                    setPage(page - 1);
+                }
+            },
+        });
+    };
+
+    const handleSubmit = (formData: any) => {
+        if (editingLot) {
+            updateLot(formData, {
+                onSuccess: () => {
+                    setDialogOpen(false);
+                    setEditingLot(null);
+                    setPage(1);
+                },
+            });
+        } else {
+            createLot(formData, {
+                onSuccess: () => {
+                    setDialogOpen(false);
+                    setPage(1);
+                },
+            });
+        }
+    };
+
+    const handleResetFilters = () => {
+        setSearch('');
+        setStatus('');
+        setTradeType('');
+        setPage(1);
+    };
+
+    const totalPages = Math.ceil((data?.data.total || 0) / 10);
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            {/* Header */}
+            <div className="flex items-center justify-between flex-wrap gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold text-gray-900">Land Lots Management</h1>
-                    <p className="text-gray-600 mt-1">Manage land auction lots and tenders</p>
+                    <h1 className="text-3xl font-bold text-gray-900">🏘️ Lots Management</h1>
+                    <p className="text-gray-600 mt-1">
+                        Create, edit, and manage land lots
+                    </p>
                 </div>
-                <Button className='cursor-pointer bg-black'>
-                    <Plus size={20} className="mr-2" />
-                    New Lot
-                </Button>
+                <div className="flex gap-2">
+                    <Button
+                        variant="secondary"
+                        size="md"
+                        onClick={() => refetch()}
+                        disabled={isLoading}
+                    >
+                        <RefreshCw size={20} className={isLoading ? 'animate-spin' : ''} />
+                    </Button>
+                    <Button onClick={handleCreateNew}>
+                        <Plus size={20} className="mr-2" />
+                        New Lot
+                    </Button>
+                </div>
             </div>
 
-            <Card className="overflow-hidden">
-                <div className="overflow-x-auto">
-                    <table className="w-full">
-                        <thead className="bg-gray-50 border-b border-gray-200">
-                            <tr>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Title</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Status</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Trade Date</th>
-                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase">Views</th>
-                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-700 uppercase">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody className="divide-y divide-gray-200">
-                            {!isLoading && data?.data.data?.map((lot) => (
-                                <tr key={lot.id} className="hover:bg-gray-50">
-                                    <td className="px-6 py-4">
-                                        <p className="text-sm font-medium text-gray-900">{lot.titleUz}</p>
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <span className="inline-block px-3 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
-                                            {lot.status}
-                                        </span>
-                                    </td>
-                                    <td className="px-6 py-4 text-sm text-gray-600">
-                                        {format(new Date(lot.tradeDate), 'MMM dd, yyyy')}
-                                    </td>
-                                    <td className="px-6 py-4">
-                                        <div className="flex items-center gap-1">
-                                            <Eye size={16} />
-                                            <span className="text-sm">{lot.viewCount}</span>
-                                        </div>
-                                    </td>
-                                    <td className="px-6 py-4 text-right">
-                                        <div className="flex gap-2 justify-end">
-                                            <Button variant="ghost" size="sm">
-                                                <Edit2 size={16} />
-                                            </Button>
-                                            <Button
-                                                variant="danger"
-                                                size="sm"
-                                                onClick={() => {
-                                                    if (confirm('Delete this lot?')) {
-                                                        deleteLot(lot.id);
-                                                    }
-                                                }}
-                                            >
-                                                <Trash2 size={16} />
-                                            </Button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
+            {/* Statistics */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-lg p-4 border border-blue-200 shadow-sm">
+                    <p className="text-blue-600 text-sm font-medium">📊 Total Lots</p>
+                    <p className="text-3xl font-bold text-blue-900 mt-2">{data?.data.total || 0}</p>
                 </div>
-            </Card>
+                <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-lg p-4 border border-purple-200 shadow-sm">
+                    <p className="text-purple-600 text-sm font-medium">📄 Current Page</p>
+                    <p className="text-3xl font-bold text-purple-900 mt-2">{page}</p>
+                </div>
+                <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-lg p-4 border border-green-200 shadow-sm">
+                    <p className="text-green-600 text-sm font-medium">📑 Total Pages</p>
+                    <p className="text-3xl font-bold text-green-900 mt-2">{totalPages || 1}</p>
+                </div>
+            </div>
+
+            {/* Filters */}
+            <LotsFilter
+                search={search}
+                status={status}
+                tradeType={tradeType}
+                onSearchChange={(value) => {
+                    setSearch(value);
+                    setPage(1);
+                }}
+                onStatusChange={(value) => {
+                    setStatus(value);
+                    setPage(1);
+                }}
+                onTradeTypeChange={(value) => {
+                    setTradeType(value);
+                    setPage(1);
+                }}
+                onReset={handleResetFilters}
+                isSearching={isLoading}
+            />
+
+            {/* Lots Table - Now handles delete modal internally */}
+            <LotsTable
+                lots={data?.data.data || []}
+                isLoading={isLoading}
+                page={page}
+                totalPages={totalPages}
+                onPageChange={setPage}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+                isDeleting={isDeleting}
+            />
+
+            {/* Create/Edit Dialog */}
+            <Dialog
+                open={dialogOpen}
+                onOpenChange={setDialogOpen}
+                title={editingLot ? '✏️ Edit Lot' : '➕ Create New Lot'}
+                footer={
+                    <div className="flex gap-3 justify-end">
+                        <Button
+                            variant="secondary"
+                            onClick={() => setDialogOpen(false)}
+                            disabled={isCreating || isUpdating}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={() => {
+                                const form = document.querySelector('form');
+                                if (form) {
+                                    form.dispatchEvent(
+                                        new Event('submit', { bubbles: true, cancelable: true })
+                                    );
+                                }
+                            }}
+                            loading={isCreating || isUpdating}
+                            disabled={isCreating || isUpdating}
+                        >
+                            {editingLot ? '✏️ Update Lot' : '➕ Create Lot'}
+                        </Button>
+                    </div>
+                }
+            >
+                <LotsForm
+                    initialData={editingLot || undefined}
+                    onSubmit={handleSubmit}
+                    isLoading={isCreating || isUpdating}
+                    onCancel={() => setDialogOpen(false)}
+                />
+            </Dialog>
         </div>
     );
 };
