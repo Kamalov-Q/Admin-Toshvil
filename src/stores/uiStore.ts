@@ -30,4 +30,4 @@ export const useUIStore = create<UIState>((set) => ({
             toasts: state.toasts.filter((t) => t?.id !== id),
         }))
     }
-}))
+}));
